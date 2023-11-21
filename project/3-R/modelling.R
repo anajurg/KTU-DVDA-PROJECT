@@ -29,6 +29,8 @@ auto_model_generator <- h2o.automl(x = x,
 auto_model_generator@leaderboard
 
 selected_model <- auto_model_generator@leader
+selected_model_performance <- h2o.performance(selected_model, newdata = test)
+selected_model_auc <- selected_model_performance@metrics$ausc
 
 prediction_results <- predict(selected_model, newdata = test_data)
 
@@ -39,3 +41,11 @@ prediction_results %>%
   write_csv("5-predictions/predictions1.csv")
 
 h2o.saveModel(selected_model, "4-model/GBM_Model_V1")
+
+gbm_model <- h2o.gbm(x = x,
+                     y = y,
+                     training_frame = train,
+                     validation_frame = valid)
+
+gbm_test_performance <- h2o.performance(gbm_model, newdata = test)
+gbm_auc = gbm_test_performance@metrics$AUC
