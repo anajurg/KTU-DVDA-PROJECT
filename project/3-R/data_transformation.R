@@ -9,6 +9,6 @@ haed(additional_data)
 head(additional_features)
 
 concatenated_data <- bind_rows(initial_data, additional_data)
-joined_data <- inner_join(concatenated_data, additional_features, by = "id")
+full_data <- inner_join(concatenated_data, additional_features, by = "id")
 write_csv(concatenated_data, "1-data/concatenated_data.csv")
-write_csv(joined_data, "1-data/joined_data.csv")
+write_csv(full_data, "1-data/full_data.csv")
