@@ -1,3 +1,14 @@
-library(readr)
-read_csv("../1-data/put_your_data_files_here.csv")
-### save combined file into 1-data directory
+library(tidyverse)
+
+initial_data <- read_csv("1-data/1-sample_data.csv")
+additional_data <- read.csv("1-data/2-additional_data.csv")
+additional_features <- read_csv("1-data/3-additional_features.csv")
+
+head(initial_data)
+haed(additional_data)
+head(additional_features)
+
+concatenated_data <- bind_rows(initial_data, additional_data)
+joined_data <- inner_join(concatenated_data, additional_features, by = "id")
+write_csv(concatenated_data, "1-data/concatenated_data.csv")
+write_csv(joined_data, "1-data/joined_data.csv")
