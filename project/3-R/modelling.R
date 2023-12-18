@@ -40,7 +40,7 @@ prediction_results %>%
   select (id, y) %>%
   write_csv("5-predictions/predictions1.csv")
 
-h2o.saveModel(selected_model, "4-model/GBM_Model_V1")
+h2o.saveModel(selected_model, "4-model/XG_BOOST_V1")
 
 gbm_model <- h2o.gbm(x = x,
                      y = y,

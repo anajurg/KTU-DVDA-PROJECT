@@ -5,7 +5,7 @@ additional_data <- read.csv("1-data/2-additional_data.csv")
 additional_features <- read_csv("1-data/3-additional_features.csv")
 
 head(initial_data)
-haed(additional_data)
+head(additional_data)
 head(additional_features)
 
 concatenated_data <- bind_rows(initial_data, additional_data)
