@@ -1,8 +1,8 @@
 library(h2o)
 h2o.init()
 
-train_data <- h2o.importFile("1-data/full_data.csv")
-test_data <- h2o.importFile("1-data/test_data.csv")
+train_data <- h2o.importFile("/Users/anastasijajurgaityte/Desktop/KTU/KTU-DVDA-PROJECT/project/1-data/full_data.csv")
+test_data <- h2o.importFile("/Users/anastasijajurgaityte/Desktop/KTU/KTU-DVDA-PROJECT/project/1-data/test_data.csv")
 
 summary(train_data)
 colnames(test_data)
@@ -24,13 +24,17 @@ auto_model_generator <- h2o.automl(x = x,
                                    max_runtime_secs = 300,
                                    sort_metric = "AUC",
                                    max_runtime_secs_per_model = 30,
-                                   exclude_algos = c("StackedEnsemble"))
+                                   seed = 1000,
+                                   include_algos = c("XGBoost", "GBM"))
 
 auto_model_generator@leaderboard
 
 selected_model <- auto_model_generator@leader
+
+selected_model.params
+
 selected_model_performance <- h2o.performance(selected_model, newdata = test)
-selected_model_auc <- selected_model_performance@metrics$ausc
+selected_model_auc <- selected_model_performance@metrics$AUC
 
 prediction_results <- predict(selected_model, newdata = test_data)
 
