@@ -3,28 +3,35 @@ library(ggplot2)
 library(h2o)
 library(tibble)
 library(shinydashboard)
+library(shinyjs)
+
 
 h2o.init()
 
-loan_model <- h2o.import_mojo("/Users/anastasijajurgaityte/Desktop/KTU/KTU-DVDA-PROJECT/project/4-model/4-model/XG_BOOST_V1/4-model/XG_BOOST_V1")
+loan_model <- h2o.import_mojo("/Users/anastasijajurgaityte/Desktop/KTU/KTU-DVDA-PROJECT/project/4-model/gbm_Model_V1/GBM_1_AutoML_2_20231121_224532.zip")
 
 ui <- dashboardPage(
   dashboardHeader(
     title = "Loan Classification Application",
-    titleWidth = 250, 
+    titleWidth = 250,
+    tags$li(
+      a(href = 'http:///ktu.edu', target = '_blank',
+        img(src = 'logo.png', height = '15px')
+    ),
   class = 'dropdown'
   )
 )
+,
 
 
   dashboardSidebar(
     sidebarMenu(
       id="sidebar",
-      menuItem("Inputs", tabName = "inputs", icon = icon("inputs")),
+      menuItem("Inputs", tabName = "inputs", icon = icon("input")),
       menuItem("Results", tabName = "results", icon = icon("chart-line")), 
-      menuItem("Model Info", tabName = "model_info", icon= icon ("info_circle"))
+      menuItem("Model Info", tabName = "model_info", icon= icon ("info-circle"))
     )
-  )
+  ),
   
   dashboardBody(
     useShinyjs(), 
@@ -52,7 +59,7 @@ ui <- dashboardPage(
     tabItem(tabName = "inputs",
             fluidRow(
               column(6, textInput("amount_current_loan", "Current Loan Amount", placeholder = "Enter amount")),
-              column(6, textInput("term", "Term", choices = c("short", "long")))
+              column(6, selectInput("term", "Term", choices = c("short", "long")))
             ),
             fluidRow(
               column(6, selectInput("credit_score", "Credit Score", choices = c("very_good", "good", "fair"))),
@@ -84,7 +91,7 @@ ui <- dashboardPage(
             )
             
   ), 
-  tableItem(table = "results", 
+  tabItem(table = "results", 
             fluidRow(
               box(title = "Input Data", status = "warning", solidHeader = TRUE, width = 12,
                   div(class = "table-responsive",
@@ -92,12 +99,12 @@ ui <- dashboardPage(
                       )
                   ),
               box(title = "Classification Result", status = "primary", solidHeader = TRUE, width = 12,
-                  h3(textOutput("classificationResults", container. = span)), 
+                  h3(textOutput("classificationResults", container = span)), 
                   img(src = "", id = "resultGif", height = "200px")
                 )
             )
   ), 
-  tableItem(tableName = "model_info", 
+  tabItem(tableName = "model_info", 
             fluidRow(
               box(title = "Variable Importance Plot", status = "primary", solidHeader = TRUE, collapsible = TRUE, 
                   plotOutput("varImportancePlot")
@@ -107,10 +114,10 @@ ui <- dashboardPage(
               )
             )
     )
-))
+)))
 
 server <- function(input, output, session){
-  observEvent(input$submit, {
+  observeEvent(input$submit, {
     inputData <- data.frame(
       amount_current_loan = as.numeric(input$amount_current_loan),
       term = input$term,

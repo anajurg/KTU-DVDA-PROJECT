@@ -8,6 +8,3 @@ Toliau sukurta aplikacija, kuri padeda įvertinti paskolą. Jos nuotrauka pridė
 
 <
 
-Duomenis galite atsisiųsti iš:
-
-[Google Drive](https://drive.google.com/drive/folders/17NsP84MecXHyctM94NLwps_tsowld_y8?usp=sharing)
