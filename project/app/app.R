@@ -123,7 +123,7 @@ server <- function(input, output, session){
       term = input$term,
       credit_score = factor(input$credit_score),
       loan_purpose = factor(input$loan_purpose),
-      yearly_income - input$yearly_income,
+      yearly_income = input$yearly_income,
       home_ownership = input$bankruptcies,
       bankruptcies = input$bankruptcies,
       years_current_job = input$years_current_job,
