@@ -1,34 +1,78 @@
 ---
-title: "test"
-author: "test"
-date: "10/3/2021"
+title: "Žvalgomoji analizė"
+author: "Anastasija Jurgaitytė"
 output:
   html_document:
     keep_md: true
----
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(readr)
+
+```{r message = FALSE, warning = FALSE, cashe=TRUE}
+df<- read_csv("../../project/1-data/full_data.csv")
+df
+```
+Duomenų failo dimensijos:
+  
+```{r}
+dim(df)
 ```
 
-TEST
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+Kintamūjų apžvalga:
+  
+```{r}
+summary(df[1:17])
 ```
 
-## Including Plots
+Yra 17 kintamūjų iš kurių informacijos galima trumpai teigti, kad vidutinis paskolos dydis yra 11765909, vidutinės metinės pajamos yra 1378367, vidutinis metų kiekis, kuriais dirbama dabartinėje darbo pozicijoje yra beveik 6 metai, mažiausiai - 0, daugiausia - 10. Ši informacija padeda nustatyti bendrą klientų profilį. Trumpai apžvelgtas laikotarpis nuo paskutinio teisės pažeidimo:
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r message=FALSE, warning=FALSE}
+library(plotly)
+df %>%
+  group_by(y, months_since_last_delinquent) %>%
+  summarise(n=n()) %>%
+  plot_ly(x= ~months_since_last_delinquent, y = ~n, type = "bar")
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Iš grafiko matyti, kad didžioji dauguma paskutinių teisės pažeidimų įvyko per paskutinius 80 mėnesių. 
+
+Duomenyse yra tuščios statistinės reikšmės tų kintamųjų, kurie yra charakterio tipo. Giliau panagrinėtas pakolos tikslo kintamasis:
+  
+```{r}
+df$loan_purpose <- as.factor(df$loan_purpose)
+summary(df$loan_purpose)
+df$y <- as.factor(df$y)
+```
+
+```{r}
+df %>%
+  group_by(loan_purpose) %>%
+  summarise(n =n()) %>%
+  arrange (desc(n)) %>%
+  kable()
+```
+
+
+Daugiausia paskola naudojama skolos padengimui, taip pat būsto remontui (584493 ). Tiesa, būsto paskolai pateikta prašymų tik 67762. Nemažai paskolų naudojama verlui 155856  - beveik tiek pat, kiek mašinos įsigijimui - 125140. Mažiausiai paskolų siekiama pradėti naudoti atsinaujinančią energiją - 985.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
